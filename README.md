@@ -4,7 +4,24 @@ A pure python-based utility to extract text from docx files.
 
 The code is taken and adapted from [python-docx](https://github.com/python-openxml/python-docx). It can however also extract text from header, footer and hyperlinks.
 
+## How to install? ##
+```bash
+pip install docx2txt
+```
+
 ## How to run? ##
 
-python py_docx2text.py file.docx
+a. From command line:
+```bash
+docx2text file.docx
+```
+b. From python:
+```python
+import docx2python
+text = docx2txt.process("file.docx")
+```
 
+
+## Found Bugs? ##
+
+Report to ankush dot shah dot nitk at gmail dot com
