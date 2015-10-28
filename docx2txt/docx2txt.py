@@ -75,14 +75,6 @@ def process(docx):
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) < 2:
-        print 'Filename missing.'
-        sys.exit(1)
-
     docx = sys.argv[1]
-    if not os.path.exists(docx):
-        print 'File %s do not exists.' % (docx)
-        sys.exit(1)
-
     text = process(docx)
     sys.stdout.write(text.encode('utf-8'))
