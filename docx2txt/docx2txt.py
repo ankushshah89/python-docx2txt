@@ -46,7 +46,7 @@ def xml2text(fname_xml):
     return text
 
 
-def get_text(docx):
+def process(docx):
     text = ''
 
     # unzip the docx into a temp directory
@@ -75,6 +75,14 @@ def get_text(docx):
 
 if __name__ == '__main__':
     import sys
+    if len(sys.argv) < 2:
+        print 'Filename missing.'
+        sys.exit(1)
+
     docx = sys.argv[1]
-    text = get_text(docx)
+    if not os.path.exists(docx):
+        print 'File %s do not exists.' % (docx)
+        sys.exit(1)
+
+    text = process(docx)
     sys.stdout.write(text.encode('utf-8'))
