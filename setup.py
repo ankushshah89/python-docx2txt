@@ -5,15 +5,15 @@ from distutils.core import setup
 scripts = glob.glob("bin/*")
 
 setup(
-  name = 'docx2txt',
-  packages = ['docx2txt'], # this must be the same as the name above
-  version = '0.3',
-  description = 'A pure python-based utility to extract text from docx files.',
-  author = 'Ankush Shah',
-  author_email = 'ankush.shah.nitk@gmail.com',
-  url = 'https://github.com/ankushshah89/python-docx2txt', # use the URL to the github repo
-  download_url = 'https://github.com/ankushshah89/python-docx2txt/tarball/0.3', # I'll explain this in a second
-  keywords = ['python', 'docx', 'text'], # arbitrary keywords
-  scripts = scripts,
-  classifiers = [],
+  name='docx2txt',
+  packages=['docx2txt'],
+  version='0.3',
+  description='A pure python-based utility to extract text from docx files.',
+  author='Ankush Shah',
+  author_email='ankush.shah.nitk@gmail.com',
+  url='https://github.com/ankushshah89/python-docx2txt',
+  download_url='https://github.com/ankushshah89/python-docx2txt/tarball/0.3',
+  keywords=['python', 'docx', 'text'],
+  scripts=scripts,
+  classifiers=[],
 )

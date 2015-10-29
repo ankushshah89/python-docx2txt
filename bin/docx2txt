@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     docx = sys.argv[1]
     if not os.path.exists(docx):
-        print 'File %s do not exists.' % (docx)
+        print 'File %s do not exist.' % (docx)
         sys.exit(1)
 
     text = docx2txt.process(docx)
