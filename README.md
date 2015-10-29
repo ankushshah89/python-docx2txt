@@ -13,11 +13,11 @@ pip install docx2txt
 
 a. From command line:
 ```bash
-docx2text file.docx
+docx2txt file.docx
 ```
 b. From python:
 ```python
-import docx2python
+import docx2txt
 text = docx2txt.process("file.docx")
 ```
 
