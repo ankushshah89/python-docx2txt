@@ -2,11 +2,10 @@
 
 import glob
 import os
-import shutil
+import re
 import xml.etree.ElementTree as ET
 import zipfile
 
-from tempfile import mkdtemp
 
 nsmap = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
 
@@ -23,7 +22,7 @@ def qn(tag):
     return '{%s}%s' % (uri, tagroot)
 
 
-def xml2text(fname_xml):
+def xml2text(xml):
     """
     A string representing the textual content of this run, with content
     child elements like ``<w:tab/>`` translated to their Python
@@ -31,8 +30,7 @@ def xml2text(fname_xml):
     Adapted from: https://github.com/python-openxml/python-docx/
     """
     text = u''
-    xml = ET.parse(fname_xml)
-    root = xml.getroot()
+    root = ET.fromstring(xml)
     for child in root.iter():
         if child.tag == qn('w:t'):
             t_text = child.text
@@ -47,30 +45,31 @@ def xml2text(fname_xml):
 
 
 def process(docx):
-    text = ''
+    text = u''
 
-    # unzip the docx into a temp directory
-    temp_dir = mkdtemp()
-    with zipfile.ZipFile(docx) as zipf:
-        zipf.extractall(temp_dir)
+    # unzip the docx in memory
+    zipf = zipfile.ZipFile(docx)
+    filelist = zipf.namelist()
 
     # get header text
     # there can be 3 header files in the zip
-    header_xmls = glob.glob(os.path.join(temp_dir, 'word', 'header*.xml'))
-    for header_xml in header_xmls:
-        text += xml2text(header_xml)
+    header_xmls = 'word/header[0-9]*.xml'
+    for fname in filelist:
+        if re.match(header_xmls, fname):
+            text += xml2text(zipf.read(fname))
 
     # get main text
-    doc_xml = os.path.join(temp_dir, 'word', 'document.xml')
-    text += xml2text(doc_xml)
+    doc_xml = 'word/document.xml'
+    text += xml2text(zipf.read(doc_xml))
 
     # get footer text
     # there can be 3 footer files in the zip
-    footer_xmls = glob.glob(os.path.join(temp_dir, 'word', 'footer*.xml'))
-    for footer_xml in footer_xmls:
-        text += xml2text(footer_xml)
+    footer_xmls = 'word/footer[0-9]*.xml'
+    for fname in filelist:
+        if re.match(footer_xmls, fname):
+            text += xml2text(zipf.read(fname))
 
-    shutil.rmtree(temp_dir)
+    zipf.close()
     return text.strip()
 
 if __name__ == '__main__':
