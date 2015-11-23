@@ -1,4 +1,4 @@
-# python-docx2text #
+# python-docx2txt #
 
 A pure python-based utility to extract text from docx files. 
 
