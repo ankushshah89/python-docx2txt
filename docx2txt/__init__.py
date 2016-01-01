@@ -1,3 +1,3 @@
-from docx2txt import process
+from .docx2txt import process
 
 VERSION = '0.4'
