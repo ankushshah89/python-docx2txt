@@ -12,8 +12,9 @@ nsmap = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
 
 
 def process_args():
-    parser = argparse.ArgumentParser(description='An utility to extract text '
-                                                 'and images from docx files')
+    parser = argparse.ArgumentParser(description='A pure python-based utility '
+                                                 'to extract text and images '
+                                                 'from docx files.')
     parser.add_argument("docx", help="path of the docx file")
     parser.add_argument('-i', '--img_dir', help='path of directory '
                                                 'to extract images')
