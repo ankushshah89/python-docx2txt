@@ -1,18 +1,9 @@
 #! /usr/bin/env python
 
 import docx2txt
-import os
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) < 2:
-        print 'Filename missing.'
-        sys.exit(1)
-
-    docx = sys.argv[1]
-    if not os.path.exists(docx):
-        print 'File %s do not exist.' % (docx)
-        sys.exit(1)
-
-    text = docx2txt.process(docx)
+    args = docx2txt.process_args()
+    text = docx2txt.process(args.docx, args.img_dir)
     sys.stdout.write(text.encode('utf-8'))

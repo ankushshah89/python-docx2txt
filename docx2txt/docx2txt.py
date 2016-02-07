@@ -1,11 +1,37 @@
 #! /usr/bin/env python
 
+import argparse
 import re
 import xml.etree.ElementTree as ET
 import zipfile
+import os
+import sys
 
 
 nsmap = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+
+
+def process_args():
+    parser = argparse.ArgumentParser(description='An utility to extract text '
+                                                 'and images from docx files')
+    parser.add_argument("docx", help="path of the docx file")
+    parser.add_argument('-i', '--img_dir', help='path of directory '
+                                                'to extract images')
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.docx):
+        print 'File %s do not exist.' % (args.docx)
+        sys.exit(1)
+
+    if args.img_dir is not None:
+        if not os.path.exists(args.img_dir):
+            try:
+                os.makedirs(args.img_dir)
+            except OSError:
+                print "Unable to create img_dir %s" % (args.img_dir)
+                sys.exit(1)
+    return args
 
 
 def qn(tag):
@@ -42,7 +68,7 @@ def xml2text(xml):
     return text
 
 
-def process(docx):
+def process(docx, img_dir=None):
     text = u''
 
     # unzip the docx in memory
@@ -67,11 +93,20 @@ def process(docx):
         if re.match(footer_xmls, fname):
             text += xml2text(zipf.read(fname))
 
+    if img_dir is not None:
+        # extract images
+        for fname in filelist:
+            _, extension = os.path.splitext(fname)
+            if extension in [".jpg", ".jpeg", ".png", ".bmp"]:
+                dst_fname = os.path.join(img_dir, os.path.basename(fname))
+                with open(dst_fname, "w") as dst_f:
+                    dst_f.write(zipf.read(fname))
+
     zipf.close()
     return text.strip()
 
+
 if __name__ == '__main__':
-    import sys
-    docx = sys.argv[1]
-    text = process(docx)
+    args = process_args()
+    text = process(args.docx, args.img_dir)
     sys.stdout.write(text.encode('utf-8'))
