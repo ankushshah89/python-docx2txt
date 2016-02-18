@@ -22,7 +22,7 @@ def process_args():
     args = parser.parse_args()
 
     if not os.path.exists(args.docx):
-        print 'File %s do not exist.' % (args.docx)
+        print('File {} does not exist.'.format(args.docx))
         sys.exit(1)
 
     if args.img_dir is not None:
@@ -30,7 +30,7 @@ def process_args():
             try:
                 os.makedirs(args.img_dir)
             except OSError:
-                print "Unable to create img_dir %s" % (args.img_dir)
+                print("Unable to create img_dir {}".format(args.img_dir))
                 sys.exit(1)
     return args
 
@@ -44,7 +44,7 @@ def qn(tag):
     """
     prefix, tagroot = tag.split(':')
     uri = nsmap[prefix]
-    return '{%s}%s' % (uri, tagroot)
+    return '{{{}}}{}'.format(uri, tagroot)
 
 
 def xml2text(xml):
