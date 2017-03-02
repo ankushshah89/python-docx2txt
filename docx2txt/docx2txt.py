@@ -85,7 +85,7 @@ class DOCReader(object):
             attr = child.attrib
             for k, v in attr.iteritems():
                 if k.endswith('id') and v in self.links:
-                    self.data['links'].append((ET.tostring(child, method='text'), self.links[v]))
+                    self.data['links'].append((ET.tostring(child, encoding='utf-8', method='text'), self.links[v]))
             if child.tag == qn('w:t'):
                 t_text = child.text
                 text += t_text if t_text is not None else ''
