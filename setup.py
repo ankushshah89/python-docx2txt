@@ -6,15 +6,14 @@ from docx2txt import VERSION
 scripts = glob.glob('bin/*')
 
 setup(
-  name='docx2txt',
-  packages=['docx2txt'],
+  name='pydocx',
+  packages=['pydocx'],
   version=VERSION,
-  description='A pure python-based utility to extract text, links and images'
+  description='A pure python-based utility to extract text, hyperlinks and images'
               'from docx files.',
-  author='Ankush Shah',
-  author_email='ankush.shah.nitk@gmail.com',
-  url='https://github.com/ankushshah89/python-docx2txt',
-  download_url='https://github.com/ankushshah89/python-docx2txt/tarball/0.6',
+  author='Ankush Shah, Yalei Du',
+  author_email='yaleidu@163.com',
+  url='https://github.com/badbye/python-docx2txt',
   keywords=['python', 'docx', 'text', 'links', 'images', 'extract'],
   scripts=scripts,
   classifiers=[],
