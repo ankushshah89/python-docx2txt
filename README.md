@@ -1,3 +1,6 @@
+![](https://travis-ci.org/badbye/docxpy.svg?branch=master)
+
+
 # docxpy #
 
 This project is forked from [ankushshah89/python-docx2txt](https://github.com/ankushshah89/python-docx2txt/pull/10/files). 
