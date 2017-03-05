@@ -1,4 +1,4 @@
-# pydocx #
+# docxpy #
 
 This project is forked from [ankushshah89/python-docx2txt](https://github.com/ankushshah89/python-docx2txt/pull/10/files). 
 A new feature is added: extract the hyperlinks and its corresponding texts.
@@ -7,7 +7,7 @@ It is a pure python-based utility to extract text from docx files. The code is t
 
 ## How to install? ##
 ```bash
-pip install pydocx
+pip install docxpy
 ```
 
 ## How to run? ##
@@ -23,19 +23,19 @@ docx2txt -i /tmp/img_dir file.docx
 
 b. From python:
 ```python
-import pydocx
+import docxpy
 
 c = 'file.docx'
 
 # extract text
-text = pydocx.process(file)
+text = docxpy.process(file)
 
 # extract text and write images in /tmp/img_dir
-text = pydocx.process(file, "/tmp/img_dir")
+text = docxpy.process(file, "/tmp/img_dir")
 
 
 # if you want the hyperlinks
-doc = pydocx.DOCReader(file)
+doc = docxpy.DOCReader(file)
 doc.process()  # process file
 hyperlinks = doc.data['links']
 ```

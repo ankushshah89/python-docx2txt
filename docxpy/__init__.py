@@ -2,4 +2,4 @@ from .docxreader import process
 from .docxreader import process_args
 from .docxreader import DOCReader
 
-VERSION = '0.7'
+VERSION = '0.8'
