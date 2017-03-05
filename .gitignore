@@ -1,3 +1,5 @@
 .idea
 *.pyc
 build
+dist
+upload.sh

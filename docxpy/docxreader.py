@@ -83,7 +83,7 @@ class DOCReader(object):
         root = ET.fromstring(xml)
         for child in root.iter():
             attr = child.attrib
-            for k, v in attr.iteritems():
+            for k, v in attr.items():
                 if k.endswith('id') and v in self.links:
                     self.data['links'].append((ET.tostring(child, encoding='utf-8', method='text'), self.links[v]))
             if child.tag == qn('w:t'):
@@ -137,4 +137,4 @@ def process(docx, img_dir=None):
 if __name__ == '__main__':
     args = process_args()
     text = process(args.docx, args.img_dir)
-    sys.stdout.write(text.encode('utf-8'))
+    print(text.encode('utf-8'))

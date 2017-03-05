@@ -1,13 +1,18 @@
+import os
 import glob
 from distutils.core import setup
-from docx2txt import VERSION
+from pydocx import VERSION
 
 # get all of the scripts
 scripts = glob.glob('bin/*')
 
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+
 setup(
-  name='pydocx',
-  packages=['pydocx'],
+  name='docxpy',
+  packages=['docxpy'],
   version=VERSION,
   description='A pure python-based utility to extract text, hyperlinks and images'
               'from docx files.',
@@ -16,5 +21,7 @@ setup(
   url='https://github.com/badbye/python-docx2txt',
   keywords=['python', 'docx', 'text', 'links', 'images', 'extract'],
   scripts=scripts,
+  test_suite='nose.collector',
+  tests_require=['nose'],
   classifiers=[],
 )

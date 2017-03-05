@@ -1,9 +1,10 @@
 #! /usr/bin/env python
 
-import pydocx
+import docxpy
+
 
 if __name__ == '__main__':
-    import sys
-    args = pydocx.process_args()
-    text = pydocx.process(args.docx, args.img_dir)
-    sys.stdout.write(text.encode('utf-8'))
+    args = docxpy.process_args()
+    text = docxpy.process(args.docx, args.img_dir)
+    print(text.encode('utf-8'))
+

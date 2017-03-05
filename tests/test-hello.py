@@ -1,5 +1,5 @@
 import unittest
-from pydocx import DOCReader
+from docxpy import DOCReader
 
 
 class Test(unittest.TestCase):
@@ -15,7 +15,7 @@ class Test(unittest.TestCase):
 
     def test_hyperlinks(self):
         links = self.file.data['links']
-        self.assertEqual(links, [('This is a hyperlink.', 'https://www.google.com/')])
+        self.assertEqual(links, [('This is a hyperlink.'.encode('utf-8'), 'https://www.google.com/')])
 
     def test_text(self):
         text = self.file.data['document'].replace('\n', '')
