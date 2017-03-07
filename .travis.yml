@@ -1,0 +1,11 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+# command to install dependencies
+install:
+  - python setup.py -q install
+# command to run tests
+script: cd tests && python test-hello.py

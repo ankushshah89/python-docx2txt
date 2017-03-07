@@ -1,9 +1,10 @@
 #! /usr/bin/env python
 
-import docx2txt
+import docxpy
+
 
 if __name__ == '__main__':
-    import sys
-    args = docx2txt.process_args()
-    text = docx2txt.process(args.docx, args.img_dir)
-    sys.stdout.write(text.encode('utf-8'))
+    args = docxpy.process_args()
+    text = docxpy.process(args.docx, args.img_dir)
+    print(text.encode('utf-8'))
+
