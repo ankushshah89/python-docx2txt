@@ -12,17 +12,23 @@ def read(fname):
 
 
 setup(
-  name='docxpy',
-  packages=['docxpy'],
-  version=VERSION,
-  description='A pure python-based utility to extract text, hyperlinks and images'
+    name='docxpy',
+    packages=['docxpy'],
+    version=VERSION,
+    description='A pure python-based utility to extract text, hyperlinks and images'
               'from docx files.',
-  author='Ankush Shah, Yalei Du',
-  author_email='yaleidu@163.com',
-  url='https://github.com/badbye/docxpy',
-  keywords=['python', 'docx', 'text', 'links', 'images', 'extract'],
-  scripts=scripts,
-  test_suite='nose.collector',
-  tests_require=['nose'],
-  classifiers=[],
+    long_description=open("README.rst").read(),
+    author='Ankush Shah, Yalei Du',
+    author_email='yaleidu@163.com',
+    url='https://github.com/badbye/docxpy',
+    keywords=['python', 'docx', 'text', 'links', 'images', 'extract'],
+    scripts=scripts,
+    test_suite='nose.collector',
+    tests_require=['nose'],
+    classifiers=[
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5"
+  ]
 )
