@@ -39,7 +39,7 @@ b. From python:
 
     import docxpy
 
-    c = 'file.docx'
+    file = 'file.docx'
 
     # extract text
     text = docxpy.process(file)
