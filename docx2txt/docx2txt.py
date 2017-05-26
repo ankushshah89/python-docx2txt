@@ -100,7 +100,7 @@ def process(docx, img_dir=None):
             _, extension = os.path.splitext(fname)
             if extension in [".jpg", ".jpeg", ".png", ".bmp"]:
                 dst_fname = os.path.join(img_dir, os.path.basename(fname))
-                with open(dst_fname, "w") as dst_f:
+                with open(dst_fname, "wb") as dst_f:
                     dst_f.write(zipf.read(fname))
 
     zipf.close()
