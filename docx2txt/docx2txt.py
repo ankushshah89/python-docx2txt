@@ -69,6 +69,21 @@ def xml2text(xml):
     return text
 
 
+def identify_document(xml):
+    """
+    Parses the contents of '_rels/.rels'
+    returns the filename of the main document node
+    """
+    root = ET.fromstring(xml)
+    xmlns = '{http://schemas.openxmlformats.org/package/2006/relationships}'
+    element = 'Relationship'
+    element_type = 'http://schemas.openxmlformats.org/officeDocument/2006/' \
+        'relationships/officeDocument'
+    xpath = "./{}{}[@Type='{}']".format(xmlns, element, element_type)
+    doc_rel = root.find(xpath)
+    return doc_rel.get('Target', None)
+
+
 def process(docx, img_dir=None):
     text = u''
 
@@ -82,10 +97,10 @@ def process(docx, img_dir=None):
     for fname in filelist:
         if re.match(header_xmls, fname):
             text += xml2text(zipf.read(fname))
-
     # get main text
-    doc_xml = 'word/document.xml'
-    text += xml2text(zipf.read(doc_xml))
+    doc_xml = identify_document(zipf.read('_rels/.rels'))
+    if doc_xml in filelist:
+        text += xml2text(zipf.read(doc_xml))
 
     # get footer text
     # there can be 3 footer files in the zip
