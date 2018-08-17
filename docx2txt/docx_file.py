@@ -80,21 +80,6 @@ def extract_image(img_bytes, img_dir, fname):
     return os.path.abspath(dst_fname)
 
 
-def un(tag):
-    # type: (str) -> str
-    """Stands for 'unqualified name'. Removes namespace from prefixed tag.
-
-    See: [Python issue 18304](https://bugs.python.org/issue18304)
-
-    Arguments:
-        tag {str} -- (possibly-)namespaced tag
-
-    Returns:
-        str -- tag name without namespace
-    """
-    return tag.split('}').pop()
-
-
 def qn(tag):
     """
     Stands for 'qualified name', a utility function to turn a namespace
@@ -107,6 +92,21 @@ def qn(tag):
     prefix, tagroot = tag.split(':')
     uri = nsmap[prefix]
     return '{{{}}}{}'.format(uri, tagroot)
+
+
+def un_qn(tag):
+    # type: (str) -> str
+    """Stands for 'unqualified name'. Removes namespace from prefixed tag.
+
+    See: [Python issue 18304](https://bugs.python.org/issue18304)
+
+    Arguments:
+        tag {str} -- (possibly-)namespaced tag
+
+    Returns:
+        str -- tag name without namespace
+    """
+    return tag.split('}').pop()
 
 
 def xml2text(xml):
@@ -143,7 +143,7 @@ def xml2dict(xml):
     """
     root = ET.fromstring(xml)
     data = {
-        un(child.tag): child.text
+        un_qn(child.tag): child.text
         for child in root.iter()}
     return data
 
