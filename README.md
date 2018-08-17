@@ -8,8 +8,8 @@ The code is taken and adapted from [python-docx](https://github.com/python-openx
 It can however also extract text from header, footer and hyperlinks.
 __It can now also extract images and properties.__
 
-It can be used as a [Python library](#Python%20Library)
-or from the [command line](#Command%20Line%20Utility).
+It can be used as a [Python library](#python-library)
+or from the [command line](#command-line-utility).
 
 ## Python Library
 
