@@ -170,18 +170,22 @@ def parse_docx(path, img_dir):
     for fname in ['_rels/.rels', 'word/_rels/document.xml.rels']:
         paths.update(load_rels(zipf.read(fname), fname))
 
-    doc_data = {IMG_KEY: paths[IMG_KEY], PROP_KEY: {}}
-    doc_data.update({
+    doc_data = {
         key: ''.join([
             xml2text(zipf.read(fname))
             for fname in paths.get(key, [])])
-        for key in TEXT_KEYS})
+        for key in TEXT_KEYS}  # type: dict
 
-    if img_dir is not None:
+    if img_dir is None:
+        doc_data[IMG_KEY] = [
+            os.path.basename(fname)
+            for fname in paths[IMG_KEY]]
+    else:
         doc_data[IMG_KEY] = [
             extract_image(zipf.read(fname), img_dir, fname)
             for fname in paths[IMG_KEY]]
 
+    doc_data[PROP_KEY] = {}
     for fname in paths[PROP_KEY]:
         doc_data[PROP_KEY].update(xml2dict(zipf.read(fname)))
 
