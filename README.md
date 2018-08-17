@@ -65,6 +65,12 @@ No keys are guaranteed, so the get() method is recommended.
 >>> # document properties
 >>> document.properties
 {'property_name': 'property value', ...}
+>>> document.properties['title']
+'title_text'
+>>> document.properties['nonexistent']
+KeyError
+>>> document.properties.get('nonexistent')
+None
 ```
 
 ## Command Line Utility
