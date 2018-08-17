@@ -1,6 +1,6 @@
 import glob
+# pylint: disable=no-name-in-module,import-error
 from distutils.core import setup
-
 # get all of the scripts
 scripts = glob.glob('bin/*')
 
