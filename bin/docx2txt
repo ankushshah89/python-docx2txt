@@ -4,6 +4,5 @@ import docx2txt
 
 if __name__ == '__main__':
     import sys
-    args = docx2txt.process_args()
-    text = docx2txt.process(args.docx, args.img_dir)
-    sys.stdout.write(text.encode('utf-8'))
+    for line in docx2txt.get_output():
+        sys.stdout.write(line)
