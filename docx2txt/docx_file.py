@@ -179,11 +179,11 @@ def parse_docx(path, img_dir):
     if img_dir is None:
         doc_data[IMG_KEY] = [
             os.path.basename(fname)
-            for fname in paths[IMG_KEY]]
+            for fname in paths.get(IMG_KEY, [])]
     else:
         doc_data[IMG_KEY] = [
             extract_image(zipf.read(fname), img_dir, fname)
-            for fname in paths[IMG_KEY]]
+            for fname in paths.get(IMG_KEY, [])]
 
     doc_data[PROP_KEY] = {}
     for fname in paths[PROP_KEY]:
