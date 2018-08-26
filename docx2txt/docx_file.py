@@ -222,6 +222,6 @@ class DocxFile(object):
     def __repr__(self):
         return 'DocxFile({!r}, {!r})'.format(self.path, self.img_dir)
 
-    def __getattr__(self, attr_name):
-        if attr_name == 'text':
-            return str(self).strip()
+    @property
+    def text(self):
+        return str(self).strip()
