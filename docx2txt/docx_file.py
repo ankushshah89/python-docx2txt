@@ -199,11 +199,29 @@ def parse_docx(path, img_dir):
         PROP_KEY: doc_data[PROP_KEY], }
 
 
+def get_path(path):
+    # type: (object) -> str
+    """Get absolute path to document
+
+    Returns:
+        str -- path to document
+    """
+    try:
+        return os.path.abspath(str(path))
+    except TypeError:
+        pass
+
+    try:
+        return os.path.abspath(path.name)  # type: ignore
+    except (AttributeError, TypeError):
+        return ''
+
+
 class DocxFile(object):
     def __init__(self, path, img_dir=None):
         doc_data = parse_docx(path, img_dir)
 
-        self.path = os.path.abspath(path)         # type: str
+        self.path = get_path(path)                # type: str
         self.img_dir = img_dir                    # type: str
         self.header = doc_data['header']          # type: str
         self.main = doc_data['main']              # type: str
