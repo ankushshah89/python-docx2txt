@@ -203,25 +203,30 @@ def get_path(path):
     # type: (object) -> str
     """Get absolute path to document
 
+    Arguments:
+        path {str} -- path to DOCX file (nominal)
+
     Returns:
-        str -- path to document
+        str -- path to document (absolute)
     """
     try:
         return os.path.abspath(str(path))
     except TypeError:
         pass
 
-    try:
-        return os.path.abspath(path.name)  # type: ignore
-    except (AttributeError, TypeError):
-        return ''
+    # TextIOWrapper, addinfourl, HTTPResponse... and more?
+    for attr in (getattr(path, key) for key in ('name', 'url')):
+        if attr is not None:
+            return str(attr)
+
+    return ''
 
 
 class DocxFile(object):
-    def __init__(self, path, img_dir=None):
-        doc_data = parse_docx(path, img_dir)
+    def __init__(self, file, img_dir=None):
+        doc_data = parse_docx(file, img_dir)
 
-        self.path = get_path(path)                # type: str
+        self.path = get_path(file)                # type: str
         self.img_dir = img_dir                    # type: str
         self.header = doc_data['header']          # type: str
         self.main = doc_data['main']              # type: str
