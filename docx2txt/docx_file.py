@@ -203,18 +203,23 @@ def get_path(path):
     # type: (object) -> str
     """Get absolute path to document
 
+    Arguments:
+        path {str} -- path to DOCX file (nominal)
+
     Returns:
-        str -- path to document
+        str -- path to document (absolute)
     """
+    # simple filesystem path string
     try:
         return os.path.abspath(str(path))
     except TypeError:
         pass
 
-    try:
-        return os.path.abspath(path.name)  # type: ignore
-    except (AttributeError, TypeError):
-        return ''
+    # addinfourl, TextIOWrapper, HTTPResponse, ?
+    for attr in [key for key in ['name', 'url'] if hasattr(path, key)]:
+        return getattr(path, attr)
+
+    return ''
 
 
 class DocxFile(object):
