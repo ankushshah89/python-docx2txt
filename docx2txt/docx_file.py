@@ -209,6 +209,7 @@ def get_path(path):
     Returns:
         str -- path to document (absolute)
     """
+    # simple filesystem path string
     try:
         return os.path.abspath(str(path))
     except TypeError:
