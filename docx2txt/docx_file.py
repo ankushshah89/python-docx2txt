@@ -37,6 +37,19 @@ def get_rel_path(parent, attrib):
     return path
 
 
+def find_rels(name_list):
+    # type: (list) -> list
+    """Filter rels with list of paths in ``name_list``
+
+    Returns:
+        list[str] -- existing paths
+    """
+    rel_base = 'word/rels/document{}.xml.rels'
+    candidates = [rel_base.format(''), rel_base.format('2')]
+
+    return ['_rels/.rels'] + [rel for rel in candidates if rel in name_list]
+
+
 def load_rels(xml, fname):
     # type: (bytes, str) -> dict
     """Parse document REL file
@@ -165,9 +178,9 @@ def parse_docx(path, img_dir):
     PROP_KEY = 'properties'
     IMG_KEY = 'image'
 
-    zipf = zipfile.ZipFile(path)
     paths = {}
-    for fname in ['_rels/.rels', 'word/_rels/document.xml.rels']:
+    zipf = zipfile.ZipFile(path)
+    for fname in find_rels(zipf.namelist()):
         paths.update(load_rels(zipf.read(fname), fname))
 
     doc_data = {
