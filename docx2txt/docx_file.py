@@ -1,4 +1,4 @@
-import os
+import os.path as os_path
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -85,12 +85,12 @@ def extract_image(img_bytes, img_dir, fname):
     Returns:
         str -- absolute path to extracted image
     """
-    dst_fname = os.path.join(img_dir, os.path.basename(fname))
+    dst_fname = os_path.join(img_dir, os_path.basename(fname))
 
     with open(dst_fname, 'wb') as dst_f:
         dst_f.write(img_bytes)
 
-    return os.path.abspath(dst_fname)
+    return os_path.abspath(dst_fname)
 
 
 def qn(tag):
@@ -191,7 +191,7 @@ def parse_docx(path, img_dir):
 
     if img_dir is None:
         doc_data[IMG_KEY] = [
-            os.path.basename(fname)
+            os_path.basename(fname)
             for fname in paths.get(IMG_KEY, [])]
     else:
         doc_data[IMG_KEY] = [
@@ -224,7 +224,7 @@ def get_path(path):
     """
     # simple filesystem path string
     try:
-        return os.path.abspath(str(path))
+        return os_path.abspath(str(path))
     except TypeError:
         pass
 
