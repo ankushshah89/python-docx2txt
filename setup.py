@@ -1,13 +1,13 @@
 import glob
+# pylint: disable=no-name-in-module,import-error
 from distutils.core import setup
-
 # get all of the scripts
 scripts = glob.glob('bin/*')
 
 setup(
   name='docx2txt',
   packages=['docx2txt'],
-  version='0.7',
+  version='0.8',
   description='A pure python-based utility to extract text and images '
               'from docx files.',
   author='Ankush Shah',

@@ -1,4 +1,4 @@
-from .docx2txt import process
-from .docx2txt import process_args
+from .docx2txt import get_output, process  # noqa
+from .docx_file import DocxFile            # noqa
 
-VERSION = '0.7'
+VERSION = '0.8'
