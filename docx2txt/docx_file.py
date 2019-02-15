@@ -7,15 +7,31 @@ from zipfile import ZipFile
 from . import dict_util, xml_util
 
 
-def get_rel_key(attribs):
+def simplify_rel(attribs):
     # type: (dict) -> str
+    """Simplify Type of a Relationship node
+
+    Arguments:
+        attribs {dict} -- attributes of Relationship node
+
+    Returns:
+        str - salient portion of rel type (officeDocument, image, etc.)
+    """
     attr = attribs.get('Type', '')
 
     return os_path.basename(attr)
 
 
-def get_rel_path(attribs):
+def locate_rel(attribs):
     # type: (dict) -> str
+    """Get path to file in Relationship node
+
+    Arguments:
+        attribs {dict} -- attributes of Relationship node
+
+    Returns:
+        str -- path of Target within package
+    """
     attr = attribs.get('Target', '')
 
     return attr.lstrip('/')
@@ -23,28 +39,61 @@ def get_rel_path(attribs):
 
 def get_package_rels(pkg_xml):
     # type: (bytes) -> dict
+    """Get package relationships
+
+    Arguments:
+        pkg_xml {bytes} -- top level relationships XML (_rels/.rels)
+
+    Returns:
+        dict -- property and document paths
+    """
     rels = xml_util.parse(pkg_xml)
 
     return {
-        get_rel_key(rel.attrib): get_rel_path(rel.attrib)
+        simplify_rel(rel.attrib): locate_rel(rel.attrib)
         for rel
         in rels.iter()}
 
 
 def parse_properties(prop_xml):
     # type: (bytes) -> dict
+    """Parse XML for document metadata
+
+    Arguments:
+        prop_xml {bytes} -- property XML file (docProps XML)
+
+    Returns:
+        dict -- document metadata
+    """
     props = xml_util.parse(prop_xml)
 
     return {xml_util.unquote(prop.tag): prop.text for prop in props.iter()}
 
 
-def is_property_rel(kind):
+def is_property_rel(rel_type):
     # type: (str) -> bool
-    return kind.endswith('-properties')
+    """Test for string indicating a property relationship
+
+    Arguments:
+        rel_type {str} -- relationship type
+
+    Returns:
+        bool -- relationship is a property
+    """
+    return rel_type.endswith('-properties')
 
 
-def get_package_properties(pkg, pkg_rels):
+def get_package_props(pkg, pkg_rels):
     # type: (ZipFile, dict) -> dict
+    """Get all properties of package
+
+    Arguments:
+        pkg {ZipFile} -- package as ZipFile
+        pkg_rels {dict} -- all package relationships
+
+    Returns:
+        dict -- properties of package
+    """
     prop_dicts = [
         parse_properties(pkg.read(path))
         for path
@@ -53,61 +102,81 @@ def get_package_properties(pkg, pkg_rels):
     return dict_util.merge(prop_dicts)
 
 
-def get_document_rels_path(doc_path):
+def get_part_rels_path(part_path):
     # type: (str) -> str
+    """Get path to document relationships
+
+    Arguments:
+        part_path {str} -- path to officeDocument relationship
+
+    Returns:
+        str -- path to relationships for ``part_path``
+    """
     path_comps = [
-        os_path.dirname(doc_path).lstrip('/'),
+        os_path.dirname(part_path).lstrip('/'),
         '_rels',
-        os_path.basename(doc_path) + '.rels']
+        os_path.basename(part_path) + '.rels']
 
     return '/'.join(path_comps)
 
 
-def get_document_rels(pkg, doc_key, doc_path):
+def get_part_rels(pkg, part_key, part_path):
     # type: (ZipFile, str, str) -> dict
-    """Parse document relationships
+    """Parse relationships of part (document)
 
     Arguments:
         pkg {zipfile.ZipFile} -- package ZipFile
-        doc_key {str} -- key to store path of officeDocument part
-        doc_path {str} -- path to officeDocument part in package
+        part_key {str} -- key to store path of officeDocument part
+        part_path {str} -- path to officeDocument part in package
 
     Returns:
         dict -- dictionary of XML data
     """
-    base_path = os_path.dirname(doc_path).lstrip('/')
-    rels_path = get_document_rels_path(doc_path)
+    base_path = os_path.dirname(part_path).lstrip('/')
+    rels_path = get_part_rels_path(part_path)
     rel_nodes = xml_util.parse(pkg.read(rels_path))
 
     rels = {}  # type: dict
     for rel_node in rel_nodes.iter():
-        key = get_rel_key(rel_node.attrib)
+        key = simplify_rel(rel_node.attrib)
         path = '/'.join([base_path, rel_node.attrib.get('Target', '')])
 
         rels[key] = rels.get(key, []) + [path]
 
-    rels.update({doc_key: [doc_path]})
+    rels.update({part_key: [part_path]})
 
     return rels
 
 
-def get_package_info(pkg, doc_type):
+def get_all_rels(pkg, part_type):
     # type: (ZipFile, str) -> tuple
-    pkg_rels = get_package_rels(pkg.read('_rels/.rels'))
-    doc_path = pkg_rels.get(doc_type, 'word/document.xml')
-    doc_rels = get_document_rels(pkg, doc_type, doc_path)
+    """Get relationships for package and part of ``part_type``
 
-    return pkg_rels, doc_rels
+    Arguments:
+        pkg {ZipFile} -- package as ZipFile
+        part_type {str} -- type of 'part' to locate (officeDocument)
+
+    Returns:
+        tuple -- package relationships, part relationships
+    """
+    pkg_rels = get_package_rels(pkg.read('_rels/.rels'))
+    part_path = pkg_rels.get(part_type, 'word/document.xml')
+    part_rels = get_part_rels(pkg, part_type, part_path)
+
+    return pkg_rels, part_rels
 
 
 def mkdir_p(path):
     # type: (str) -> None
+    """Recursively create directory at ``path``
+
+    Arguments:
+        path {str} -- directory to create
+    """
     try:
         makedirs(path)
     except OSError as err:
-        if err.errno == errno.EEXIST and os_path.isdir(path):
-            pass
-        else:
+        if err.errno != errno.EEXIST or not os_path.isdir(path):
             raise
 
 
@@ -178,7 +247,7 @@ def read_docx(path, img_dir):
         path {str} -- path to DOCX file
 
     Keyword Arguments:
-        img_dir {str} -- save images in specififed directory (default: {None})
+        img_dir {str} -- save images in specififed directory
 
     Returns:
         dict -- header, main, footer, images, and properties of DOCX file
@@ -189,7 +258,7 @@ def read_docx(path, img_dir):
     IMG_KEY = 'image'
 
     with ZipFile(path) as pkg:
-        pkg_rels, doc_rels = get_package_info(pkg, MAIN_KEY)
+        pkg_rels, doc_rels = get_all_rels(pkg, MAIN_KEY)
 
         text = {
             key: ''.join([
@@ -208,7 +277,7 @@ def read_docx(path, img_dir):
                 extract_image(pkg.read(fname), img_dir, fname)
                 for fname in doc_rels.get(IMG_KEY, [])]
 
-        props = get_package_properties(pkg, pkg_rels)
+        props = get_package_props(pkg, pkg_rels)
 
     return {
         'header': text.get(HEAD_KEY),
@@ -246,21 +315,19 @@ class DocxFile(object):
     def __init__(self, file, img_dir=None):
         doc_data = read_docx(file, img_dir)
 
-        self._path = get_path(file)                     # type: str
-        self._img_dir = img_dir                         # type: str
-        self._header = str(doc_data['header']).strip()  # type: str
-        self._main = str(doc_data['main']).strip()      # type: str
-        self._footer = str(doc_data['footer']).strip()  # type: str
-        self._images = doc_data['images']               # type: list
-        self._properties = doc_data['properties']       # type: dict
+        self._path = get_path(file)                # type: str
+        self._img_dir = img_dir                    # type: str
+        self._header = doc_data['header']          # type: str
+        self._main = doc_data['main']              # type: str
+        self._footer = doc_data['footer']          # type: str
+        self._images = doc_data['images']          # type: list
+        self._properties = doc_data['properties']  # type: dict
 
     def __str__(self):
-        str_val = ''.join(self._main)
-
         if sys.version_info[0] < 3:
-            return str_val.encode('utf-8')
+            return self._main.encode('utf-8')
 
-        return str_val
+        return self._main
 
     def __repr__(self):
         return 'DocxFile({!r}, {!r})'.format(self._path, self._img_dir)
