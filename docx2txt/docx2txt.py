@@ -86,6 +86,14 @@ def process(docx: str, img_dir: str=None) -> str:
     -------
     text : str
         All the text extracted from the Word document.
+
+    Examples
+    --------
+    extract text
+    >>> text = docx2txt.process("file.docx")
+
+    extract text and write images in /tmp/img_dir
+    >>> text = docx2txt.process("file.docx", "/tmp/img_dir")
     """
     text = u''
 
