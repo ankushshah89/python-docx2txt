@@ -98,7 +98,7 @@ def process(docx, img_dir=None):
         # extract images
         for fname in filelist:
             _, extension = os.path.splitext(fname)
-            if extension in [".jpg", ".jpeg", ".png", ".bmp"]:
+            if extension in [".jpg", ".jpeg", ".png", ".bmp", ".gif"]:
                 dst_fname = os.path.join(img_dir, os.path.basename(fname))
                 with open(dst_fname, "wb") as dst_f:
                     dst_f.write(zipf.read(fname))
