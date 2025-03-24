@@ -66,6 +66,8 @@ def xml2text(xml):
             text += '\n'
         elif child.tag == qn("w:p"):
             text += '\n\n'
+        elif child.tag == qn("w:noBreakHyphen"):
+            text += '-'
     return text
 
 
