@@ -69,7 +69,32 @@ def xml2text(xml):
     return text
 
 
-def process(docx, img_dir=None):
+def process(docx: str, img_dir: str=None) -> str:
+    """Return all text extracted from the Word document located at the path `docx`. If `img_dir` is specified,
+    extract all images from the Word document and save in the directory `img_dir`.
+
+    Parameters
+    ----------
+    docx : str
+        The path to the Word document from which the text and images are to be extracted.
+
+    img_dir : str, default None
+        The path to a directory where the images extracted from the Word document will be written to.
+        If not specified, no images will be extracted.
+
+    Returns
+    -------
+    text : str
+        All the text extracted from the Word document.
+
+    Examples
+    --------
+    extract text
+    >>> text = docx2txt.process("file.docx")
+
+    extract text and write images in /tmp/img_dir
+    >>> text = docx2txt.process("file.docx", "/tmp/img_dir")
+    """
     text = u''
 
     # unzip the docx in memory
