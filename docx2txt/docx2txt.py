@@ -93,9 +93,16 @@ def process(docx, img_dir=None):
     for fname in filelist:
         if re.match(footer_xmls, fname):
             text += xml2text(zipf.read(fname))
-
+    
+    # extract images
     if img_dir is not None:
-        # extract images
+    
+    #Create directory.    
+        try:
+            os.mkdir(img_dir)
+        except:
+            pass 
+        
         for fname in filelist:
             _, extension = os.path.splitext(fname)
             if extension in [".jpg", ".jpeg", ".png", ".bmp"]:
